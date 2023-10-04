@@ -82,7 +82,7 @@ describe('User Ragistration with unmatched password', () => {
 });
 
 
-describe('User Registration Successfully', () => {
+describe('User Registration by all required acttion', () => {
   let isUserRegistered = false;
 
   it('User should be registered and redirected to the account URL with the success message', () => {

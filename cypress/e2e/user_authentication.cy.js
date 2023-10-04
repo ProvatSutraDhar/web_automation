@@ -64,7 +64,7 @@ describe('User Ragistration with unmatched password', () => {
 });
 
 
-describe('User Ragistration with unmatched password', () => {
+describe('User Ragistration with invalid telephone number', () => {
   it('User should not be registered and get a warning messege; Warning:Telephone must be between 3 and 32 characters!', () => {
     cy.visit('index.php?route=account/login'); // This will navigate to 'https://www.tvhut.com.bd/'
     cy.get('.accordion-menu-item-1 > a > .links-text').click()// Navigate to the registration page and fill in the form

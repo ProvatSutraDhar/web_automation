@@ -2,7 +2,7 @@
 
 // registration process
 
-describe('User Ragistration without accepting privecy policy', () => {
+describe('User Ragistration without accepting any action and input fields', () => {
   it('User should not be registered and get a warning messege; Warning: You must agree to the Privacy Policy!' , () => {
     cy.visit('index.php?route=account/login'); // This will navigate to 'https://www.tvhut.com.bd/'
     cy.get('.accordion-menu-item-1 > a > .links-text').click()

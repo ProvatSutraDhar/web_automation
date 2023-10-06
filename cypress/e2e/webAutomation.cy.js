@@ -128,7 +128,7 @@ describe('User Authentication Operations', () => {
 
 describe('CRUD - Operations', () => {
   
-  it('User should be updated user information' , () => {
+  it('should be updated user information' , () => {
       cy.visit('index.php?route=account/login'); // This will navigate to 'https://www.tvhut.com.bd/'
       cy.get('#input-email').type("example@example.com")
       cy.get('#input-password').type("1234")
@@ -136,7 +136,7 @@ describe('CRUD - Operations', () => {
       cy.url().should('include', '/index.php?route=account/account');
       cy.visit('index.php?route=account/account'); // This will navigate to dashboard
       cy.get('.edit-info > a').click();
-      cy.get('#input-firstname').clear().type("Jhon Doe")
+      cy.get('#input-firstname').clear().type("Jhon")
       //cy.get('#input-lastname').clear().type("testing Doe1")
       //cy.get('#input-telephone').clear().type("01245755441")
       cy.get('.pull-right > .btn').click()

@@ -9,6 +9,7 @@
   "author": "provatQUPS_TA_2.1",
   "license": "ISC",
   "devDependencies": {
+    "@shelex/cypress-allure-plugin": "^2.40.0",
     "chai": "^4.3.10",
     "cypress": "^13.3.0",
     "cypress-cucumber-preprocessor": "^4.3.1",

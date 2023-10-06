@@ -1,4 +1,5 @@
-const { defineConfig } = require('cypress')
+const { defineConfig } = require('cypress');
+const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 
 module.exports = defineConfig({
   e2e: {
@@ -6,4 +7,7 @@ module.exports = defineConfig({
     viewportHeight: 720,
     baseUrl: 'https://www.tvhut.com.bd/',
   },
-})
+  plugins: (on) => {
+    allureWriter(on);
+  },
+});

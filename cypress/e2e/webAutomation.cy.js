@@ -107,8 +107,6 @@ describe('User Authentication Operations', () => {
     cy.contains(' E-Mail Address is already registered!').should('exist');
   });
 
-
-
 // Login process
 
   it('User should not be logged in and get a warning messege; No match for E-Mail Address and/or Password.', () => {
@@ -124,7 +122,190 @@ describe('User Authentication Operations', () => {
     cy.get('#input-email').type("example@example.com")
     cy.get('#input-password').type("1234")
     cy.get('.form-horizontal > .buttons > .pull-right > .btn').click(); // this will click on the login button.
-   // cy.url().should('include', 'index.php?route=account/success');
    cy.url().should('include', '/index.php?route=account/account');
   });
 });
+
+describe('CRUD - Operations', () => {
+  
+  it('User should be updated user information' , () => {
+      cy.visit('index.php?route=account/login'); // This will navigate to 'https://www.tvhut.com.bd/'
+      cy.get('#input-email').type("example@example.com")
+      cy.get('#input-password').type("1234")
+      cy.get('.form-horizontal > .buttons > .pull-right > .btn').click(); // this will click on the login button.
+      cy.url().should('include', '/index.php?route=account/account');
+      cy.visit('index.php?route=account/account'); // This will navigate to dashboard
+      cy.get('.edit-info > a').click();
+      cy.get('#input-firstname').clear().type("Jhon Doe")
+      //cy.get('#input-lastname').clear().type("testing Doe1")
+      //cy.get('#input-telephone').clear().type("01245755441")
+      cy.get('.pull-right > .btn').click()
+      cy.contains('Your account has been successfully updated.').should('exist');
+      cy.url().should('include', '/index.php?route=account/account');
+
+  });
+
+    it('should be create a product review' , () => {
+      cy.visit('/'); // This will navigate to 'https://www.tvhut.com.bd/'
+      cy.get('.tt-input').clear().type("Smart watch")
+      cy.get('.search-button').click()
+      cy.get('.filter-radio > :nth-child(1) > input').click()
+      cy.get(':nth-child(1) > .product-thumb > .image > .product-img > div').click()
+      cy.get('.tab-3 > a').click()
+      cy.get('#input-name').type("Jhon Doe")
+      cy.get('#input-review').type("This is Automated testing review")
+      cy.get('[value="4"]').click()
+      cy.get('#button-review').click()
+      cy.contains('Thank you for your review. It has been submitted to the webmaster for approval.').should('exist');
+  });
+
+    it('should be delete from cart' , () => {
+      cy.visit('index.php?route=account/login'); // This will navigate to 'https://www.tvhut.com.bd/'
+      cy.get('#input-email').type("example@example.com")
+      cy.get('#input-password').type("1234")
+      cy.visit('/'); // This will navigate to 'https://www.tvhut.com.bd/'
+      cy.get('.tt-input').clear().type("Smart watch")
+      cy.get('.search-button').click()
+      cy.get(':nth-child(1) > .product-thumb > .caption > .buttons-wrapper > .button-group > .cart-group > .btn').click()
+      cy.get('.notification-buttons > .btn-cart').click()
+      cy.get('.btn-remove > .fa').click()
+      cy.contains('Your shopping cart is empty!').should('exist');
+  });
+
+
+it('should be create a an order' , () => {
+  cy.visit('/'); // This will navigate to 'https://www.tvhut.com.bd/'
+  cy.get('.tt-input').clear().type(" washing machine")
+  cy.get('.search-button').click()
+  cy.get('.filter-radio > :nth-child(1) > input').click()
+  cy.get(':nth-child(1) > .product-thumb > .image > .product-img > div').click()
+  cy.get('.tab-3 > a').click()
+  cy.get('#input-name').type("Jhon Doe")
+  cy.get('#input-review').type("This is Automated testing review")
+  cy.get('[value="4"]').click()
+  cy.get('#button-review').click()
+  cy.contains('Thank you for your review. It has been submitted to the webmaster for approval.').should('exist');
+});
+
+
+
+it('should be create a an order' , () => {
+  cy.visit('/'); // This will navigate to 'https://www.tvhut.com.bd/'
+    cy.get('.tt-input').clear().type(" washing machine") // will search for washing machine
+    cy.get('.search-button').click()// search for the product
+    cy.get('.filter-radio > :nth-child(1) > input').click() // check radio option for product in stock 
+    cy.get(':nth-child(1) > .product-thumb > .caption > .buttons-wrapper > .button-group > .cart-group > .btn').click()// it will click on first product
+    cy.get('.notification-buttons > .btn-cart').click()
+    cy.get('.clearfix > .pull-right > .btn').click();
+    cy.get(':nth-child(2) > .radio > label').click() //select cash on delivery
+    cy.get('#input-firstname').type("Test order")
+    cy.get('#input-email').type("jho@ndoe.com")
+    cy.get('#input-telephone').type("telephone")
+    cy.get('#input-payment-address-1').type("Test address")  
+    cy.get('.section-comments > .form-control').type("automated testing order process")
+    cy.get('.section-body > :nth-child(3) > label > input').click()//accept privecy policy
+    cy.get(':nth-child(4) > label > input').click()//accept condition
+    cy.get('#quick-checkout-button-confirm').click()//confirm order
+    cy.wait(700)
+    cy.get('#button-confirm').click()//confirm with pop-up
+    cy.url().should('include', 'index.php?route=checkout/success');
+    cy.contains('Your order has been placed!').should('exist');
+  });
+
+
+  let isProductOrder = true;
+  it('should view an order', () => {
+    cy.visit('index.php?route=account/login'); // This will navigate to 'https://www.tvhut.com.bd/'
+    cy.get('#input-email').type("example@example.com")
+    cy.get('#input-password').type("1234")
+    cy.get('.form-horizontal > .buttons > .pull-right > .btn').click(); // this will click on the login button.
+    cy.url().should('include', '/index.php?route=account/account');    
+    cy.get('.accordion-menu-item-4 > a > .links-text').click()
+    if (isProductOrder){
+      cy.get('tbody > tr > :nth-child(1)').invoke('text').then((text) => {
+        // Extract the numeric value from the text (remove the "#" symbol)
+        const numericOrderId = text.replace(/\D/g, '');
+        cy.get(':nth-child(7) > .btn').click()
+        cy.url().should('include', `route=account/order/info&order_id=${numericOrderId}`);
+        cy.contains("Order ID:").should("exist")
+      });
+    }
+    else{
+      cy.contains("You have not made any previous orders!").should("exist")
+    }
+  });
+
+});
+
+
+describe('Field Validation ', () => {
+
+ 
+  it('should be validate empty feilds before create an order' , () => {
+  
+      cy.visit('/'); // This will navigate to 'https://www.tvhut.com.bd/'
+      cy.get('.tt-input').clear().type(" washing machine") // will search for washing machine
+      cy.get('.search-button').click()// search for it
+      cy.get('.filter-radio > :nth-child(1) > input').click() // check radio option for product in stock 
+      cy.get(':nth-child(1) > .product-thumb > .caption > .buttons-wrapper > .button-group > .cart-group > .btn').click()// it will click on first product
+      cy.get('.notification-buttons > .btn-cart').click()
+      cy.get('.clearfix > .pull-right > .btn').click();
+      cy.get(':nth-child(2) > .radio > label').click() //select cash on delivery
+      cy.get('#input-firstname').type(" ")
+      cy.get('#input-email').type("jho@ndoe.com")
+      cy.get('#input-telephone').type("telephone")
+      cy.get('#input-payment-address-1').type("Test address")  
+      cy.get('.section-comments > .form-control').type("automated testing order process")
+      cy.get('.section-body > :nth-child(3) > label > input').click()//accept privecy policy
+      cy.get(':nth-child(4) > label > input').click()//accept condition\
+      cy.get('#quick-checkout-button-confirm').click()//confirm order
+      cy.contains('First Name must be between 1 and 32 characters!').should('exist');
+    });
+    
+  
+  });
+
+
+  describe('link verification', () => {
+
+    it('should verify privecy policy', () => {
+      cy.visit('/'); // This will navigate to 'https://www.tvhut.com.bd/'
+      cy.get('.links-menu-item-10 > a > .links-text').click()
+      cy.url().should('include', 'privacy-policy'); // Verify that the URL contains the specified string
+      cy.contains('Privacy Policy').should('exist'); // Verify the location details are visible on the page
+    });
+  
+
+    it('should verify terms and condition', () => {
+      cy.visit('/'); // This will navigate to 'https://www.tvhut.com.bd/'
+      cy.get('.links-menu-item-4 > a > .links-text').click()
+      cy.url().should('include', 'terms'); // Verify that the URL contains the specified string
+      cy.contains('DISCLAIMER').should('exist'); // Verify the location details are visible on the page
+    });
+
+
+    it('should click an dropdown menu', () => {
+      cy.visit('/'); // This will navigate to 'https://www.tvhut.com.bd/'
+      cy.get('.main-menu-item-9 > .dropdown-toggle > .links-text').click() // click on the dropdown
+      cy.get('.menu-item-c419 > a > .links-text').click()// click dopdown list
+      cy.contains("Samsung").should("exist")// check the product is exist?
+        });
+
+
+     it('should be search for product', () => {
+      cy.visit('/'); // This will navigate to 'https://www.tvhut.com.bd/
+      cy.get('.tt-input').type('LG')
+      cy.wait(1000);
+      cy.get('.search-button').click()
+      cy.contains("Products meeting the search criteria").should('exist')
+      });    
+
+});
+
+
+
+
+
+
+
+  

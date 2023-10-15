@@ -152,14 +152,14 @@ describe('CRUD - Operations', () => {
       cy.get('.filter-radio > :nth-child(1) > input').click()
       cy.get(':nth-child(1) > .product-thumb > .image > .product-img > div').click()
       cy.get('.tab-3 > a').click()
-      cy.get('#input-name').type("Jhon Doe")
+      cy.get('#input-name').type("Doe Jhon")
       cy.get('#input-review').type("This is Automated testing review")
       cy.get('[value="4"]').click()
       cy.get('#button-review').click()
       cy.contains('Thank you for your review. It has been submitted to the webmaster for approval.').should('exist');
   });
 
-    it('should be delete from cart' , () => {
+    it('should add and delete from cart' , () => {
       cy.visit('index.php?route=account/login'); // This will navigate to 'https://www.tvhut.com.bd/'
       cy.get('#input-email').type("example@example.com")
       cy.get('#input-password').type("1234")
@@ -173,7 +173,7 @@ describe('CRUD - Operations', () => {
   });
 
 
-it('should be create a an order' , () => {
+it('should create a an order' , () => {
   cy.visit('/'); // This will navigate to 'https://www.tvhut.com.bd/'
   cy.get('.tt-input').clear().type(" washing machine")
   cy.get('.search-button').click()
@@ -213,7 +213,7 @@ it('should be create a an order' , () => {
   });
 
 
-  let isProductOrder = true;
+  let isProductOrder = false;
   it('should view an order', () => {
     cy.visit('index.php?route=account/login'); // This will navigate to 'https://www.tvhut.com.bd/'
     cy.get('#input-email').type("example@example.com")
@@ -222,16 +222,16 @@ it('should be create a an order' , () => {
     cy.url().should('include', '/index.php?route=account/account');    
     cy.get('.accordion-menu-item-4 > a > .links-text').click()
     if (isProductOrder){
-      cy.get('tbody > tr > :nth-child(1)').invoke('text').then((text) => {
+      cy.contains("You have not made any previous orders!").should("exist")
+    }
+    else{
+          cy.get('tbody > tr > :nth-child(1)').invoke('text').then((text) => {
         // Extract the numeric value from the text (remove the "#" symbol)
         const numericOrderId = text.replace(/\D/g, '');
         cy.get(':nth-child(7) > .btn').click()
         cy.url().should('include', `route=account/order/info&order_id=${numericOrderId}`);
         cy.contains("Order ID:").should("exist")
       });
-    }
-    else{
-      cy.contains("You have not made any previous orders!").should("exist")
     }
   });
 
@@ -240,7 +240,6 @@ it('should be create a an order' , () => {
 
 describe('Field Validation ', () => {
 
- 
   it('should be validate empty feilds before create an order' , () => {
   
       cy.visit('/'); // This will navigate to 'https://www.tvhut.com.bd/'
@@ -262,7 +261,6 @@ describe('Field Validation ', () => {
       cy.contains('First Name must be between 1 and 32 characters!').should('exist');
     });
     
-  
   });
 
 
